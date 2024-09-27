@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Les Kabyles, Les Rifains, Les Chaouis et Les Guanches en France - Robotika Mode</title>
+    
+    <!-- Leaflet CSS for map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <!-- Custom Robotika styles -->
+    <style>
+        body {
+            background-color: #0a0a0a;
+            font-family: 'Orbitron', sans-serif;
+            color: #00fff7;
+        }
+        h1 {
+            text-align: center;
+            color: #00fff7;
+            font-size: 2.5em;
+            margin-top: 20px;
+        }
+        #map {
+            height: 600px;
+            width: 100%;
+            border: 3px solid #00fff7;
+            box-shadow: 0 0 20px #00fff7;
+        }
+        .leaflet-popup-content-wrapper {
+            background-color: #0a0a0a !important;
+            border: 1px solid #00fff7 !important;
+            color: #00fff7 !important;
+        }
+        .leaflet-popup-tip {
+            background: #00fff7 !important;
+        }
+        .legend {
+            background-color: rgba(10, 10, 10, 0.8);
+            padding: 10px;
+            color: #00fff7;
+            font-size: 14px;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            border-radius: 5px;
+            border: 2px solid #00fff7;
+            box-shadow: 0 0 15px #00fff7;
+            z-index: 1000; /* Ensures the legend appears above the map */
+        }
+        .legend h3 {
+            margin: 0 0 10px 0;
+        }
+        .legend .color-box {
+            width: 15px;
+            height: 15px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .kabyles { background-color: #00fff7; }
+        .rifains { background-color: #ff00ff; }
+        .chaouis { background-color: #ffcc00; }
+        .guanches { background-color: #00ff00; }
+    </style>
+</head>
+<body>
+
+    <h1>Les Kabyles, Les Rifains, Les Chaouis et Les Guanches en France</h1>
+    <div id="map"></div>
+
+    <!-- Legend for marker colors -->
+    <div class="legend">
+        <h3>Légende des Communautés Berbères</h3>
+        <div><span class="color-box kabyles"></span>Kabyles</div>
+        <div><span class="color-box rifains"></span>Rifains</div>
+        <div><span class="color-box chaouis"></span>Chaouis</div>
+        <div><span class="color-box guanches"></span>Guanches</div>
+    </div>
+
+    <script>
+        // Initialize the map and set the view to France's coordinates with zoom
+        var map = L.map('map').setView([46.603354, 1.888334], 6);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Define cities with Berber community presence and community types
+        var cities = [
+            { "name": "Paris", "lat": 48.8566, "lon": 2.3522, "community": "kabyles" },
+            { "name": "Lyon", "lat": 45.7640, "lon": 4.8357, "community": "rifains" },
+            { "name": "Marseille", "lat": 43.2965, "lon": 5.3698, "community": "chaouis" },
+            { "name": "Lille", "lat": 50.6292, "lon": 3.0573, "community": "guanches" }
+        ];
+
+        // Define community colors based on the group
+        var communityColors = {
+            "kabyles": "#00fff7",   // Cyan
+            "rifains": "#ff00ff",   // Magenta
+            "chaouis": "#ffcc00",   // Yellow
+            "guanches": "#00ff00"   // Green
+        };
+
+        // Add glowing markers and popups for each city in Robotika style
+        cities.forEach(function(city) {
+            var markerColor = communityColors[city.community];
+            var marker = L.marker([city.lat, city.lon], {
+                icon: L.divIcon({
+                    className: 'robotika-marker',
+                    html: `<div style="background-color: ${markerColor}; width: 15px; height: 15px; border-radius: 50%; box-shadow: 0 0 15px ${markerColor};"></div>`,
+                    iconSize: [15, 15]
+                })
+            }).addTo(map);
+            
+            marker.bindPopup("<b style='color:" + markerColor + "'>" + city.name + "</b><br>Population berbère: " + city.community.charAt(0).toUpperCase() + city.community.slice(1) + ".", {
+                className: 'robotika-popup'
+            });
+        });
+    </script>
+
+</body>
+</html>
